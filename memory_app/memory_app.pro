@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += \
+    qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -26,3 +27,13 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    main.qml \
+    img/playing-card.jpg \
+    img/card_back.png \
+    img/card_back_2.png \
+    img/table.png \
+    MemoryCard.qml \
+    img/empty.png \
+    MemoryCard.qml
