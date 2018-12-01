@@ -2,27 +2,85 @@ import QtQuick 2.9
 
 Rectangle {
     id: root
-    width: 140
-    height: 180
 
     property bool cardOpened: false
-    //property alias isOpened: card_pic.visible
+    property bool isSelected: false
+    property bool mouseClickEnabled: true
+    property bool cardFreezed: false
     property alias src: card_pic.source
+
     signal clicked
+
+
+    state: "closed"
+
+    states: [
+        State {
+            name: "opened"; when: cardOpened;
+            PropertyChanges { target: card_pic; visible: true }
+            PropertyChanges { target: card_back; visible: false }
+
+        },
+        State {
+            name: "closed"; when: !cardOpened;
+            PropertyChanges {target: card_pic; visible: false }
+            PropertyChanges {target: card_back; visible: true }
+        }
+    ]
+
+    transitions: [
+        Transition {
+            from: "opened"
+            to: "closed"
+            SequentialAnimation {
+                id: revertAnimation
+
+                NumberAnimation {
+                    target: card_back
+                    property: "height"
+                    from: 0
+                    to: card_back.height
+                    duration: 100
+                    //easing.type: Easing.InOutQuad
+                }
+
+                // should be the sequential animation for the card revert
+            }
+        },
+        // add reverted Transition too
+        Transition {
+            from: "closed"
+            to: "opened"
+            SequentialAnimation {
+                NumberAnimation {
+                    target: card_pic
+                    property: "height"
+                    from: 0
+                    to: card_pic.height
+                    duration: 100
+                    //easing.type: Easing.InOutQuad
+                }
+            }
+
+        }
+
+    ]
+
+
 
     Image {
         id: card_pic
         anchors.centerIn: parent
         source: 'img/empty.png'
-        visible: cardOpened
-        property alias mouse_enabled: card_pic_mouse.enabled
+        //visible: cardOpened
+        //property alias mouse_enabled: card_pic_mouse.enabled
         MouseArea {
             id: card_pic_mouse
             width: parent.width
             height: parent.height
-            enabled: true
+            enabled: !cardFreezed //true
             onClicked: {
-                closeCard()
+                //closeCard()
                 root.clicked()
             }
         }
@@ -32,12 +90,13 @@ Rectangle {
         id: card_back
         anchors.centerIn: parent
         source: 'img/card_back_2.png'
-        visible: !cardOpened
+        //visible: !cardOpened
         MouseArea {
             width: parent.width
             height: parent.height
+            enabled: !cardFreezed
             onClicked: {
-                openCard()
+                //openCard()
                 root.clicked()
             }
         }
@@ -48,7 +107,7 @@ Rectangle {
         text: 'closed'
         //anchors.
     }
-*/
+
     function closeCard() {
         cardOpened = false;
         //card_back.visible = true;
@@ -64,6 +123,8 @@ Rectangle {
     function freeze() {
         card_pic.mouse_enabled = false;
     }
+*/
 
 }
+
 
