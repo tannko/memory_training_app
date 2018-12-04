@@ -40,14 +40,12 @@ Rectangle {
                     property: "height"
                     from: 0
                     to: card_back.height
-                    duration: 100
-                    //easing.type: Easing.InOutQuad
+                    duration: 400
+                    easing.type: Easing.OutExpo
                 }
 
-                // should be the sequential animation for the card revert
             }
         },
-        // add reverted Transition too
         Transition {
             from: "closed"
             to: "opened"
@@ -57,8 +55,8 @@ Rectangle {
                     property: "height"
                     from: 0
                     to: card_pic.height
-                    duration: 100
-                    //easing.type: Easing.InOutQuad
+                    duration: 400
+                    easing.type: Easing.OutExpo
                 }
             }
 
@@ -72,15 +70,12 @@ Rectangle {
         id: card_pic
         anchors.centerIn: parent
         source: 'img/empty.png'
-        //visible: cardOpened
-        //property alias mouse_enabled: card_pic_mouse.enabled
         MouseArea {
             id: card_pic_mouse
             width: parent.width
             height: parent.height
             enabled: !cardFreezed //true
             onClicked: {
-                //closeCard()
                 root.clicked()
             }
         }
@@ -90,40 +85,15 @@ Rectangle {
         id: card_back
         anchors.centerIn: parent
         source: 'img/card_back_2.png'
-        //visible: !cardOpened
         MouseArea {
             width: parent.width
             height: parent.height
             enabled: !cardFreezed
             onClicked: {
-                //openCard()
                 root.clicked()
             }
         }
     }
-/*
-    Text {
-        id: txt
-        text: 'closed'
-        //anchors.
-    }
-
-    function closeCard() {
-        cardOpened = false;
-        //card_back.visible = true;
-        //card_pic.visible = false;
-    }
-
-    function openCard() {
-        cardOpened = true;
-        //card_back.visible = false;
-        //card_pic.visible = true;
-    }
-
-    function freeze() {
-        card_pic.mouse_enabled = false;
-    }
-*/
 
 }
 

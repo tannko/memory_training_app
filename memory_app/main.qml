@@ -22,7 +22,9 @@ Window {
         property int pairCount: 4
         property int openPairCount: 0
 
-        function getIndexArray(count) {
+
+
+        function getCardsIndexArray(count) {
             var i = 0, j = 0, array = [];
             for (i=0; i< count; i++) {
                 for (j=0; j<2; j++)
@@ -142,7 +144,7 @@ Window {
             id: grid
             anchors.fill: parent
             anchors.margins: impl.gridMargins
-            model: impl.getIndexArray(impl.pairCount)
+            model: impl.getCardsIndexArray(impl.pairCount)
 
             cellWidth: impl.gridCellWidth
             cellHeight: impl.gridCellHeight
