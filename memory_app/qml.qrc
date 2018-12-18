@@ -11,5 +11,17 @@
         <file>img/physics/physics_2.png</file>
         <file>img/physics/physics_3.png</file>
         <file>img/physics/physics_0.png</file>
+        <file>Button.qml</file>
+        <file>WelcomePage.qml</file>
+        <file>SettingsPage.qml</file>
+        <file>SetChoosePage.qml</file>
+        <file>LevelChoosePage.qml</file>
+        <file>GamePage.qml</file>
+        <file>PauseWindow.qml</file>
+        <file>ResultsPage.qml</file>
+        <file>img/set_logo/set_0.png</file>
+        <file>img/set_logo/set_1.png</file>
+        <file>img/set_logo/set_2.png</file>
+        <file>MemorySet.qml</file>
     </qresource>
 </RCC>
