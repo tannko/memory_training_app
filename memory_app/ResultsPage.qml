@@ -7,6 +7,7 @@ Rectangle {
     signal nextLevelClicked
 
     // show Time and Quality Results and Total
+
     Rectangle {
         id: timeResult
         border.color: "black"

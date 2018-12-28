@@ -6,24 +6,23 @@ Rectangle {
     property bool cardOpened: false
     property bool isSelected: false
     property bool mouseClickEnabled: true
-    property bool cardFreezed: false
-    property alias src: card_pic.source
+    property bool cardFrozen: false
+    property alias src: card_face.source
 
     signal clicked
-
 
     state: "closed"
 
     states: [
         State {
             name: "opened"; when: cardOpened;
-            PropertyChanges { target: card_pic; visible: true }
+            PropertyChanges { target: card_face; visible: true }
             PropertyChanges { target: card_back; visible: false }
 
         },
         State {
             name: "closed"; when: !cardOpened;
-            PropertyChanges {target: card_pic; visible: false }
+            PropertyChanges {target: card_face; visible: false }
             PropertyChanges {target: card_back; visible: true }
         }
     ]
@@ -39,7 +38,7 @@ Rectangle {
                     target: card_back
                     property: "height"
                     from: 0
-                    to: card_back.height
+                    to: card_back.sourceSize.height
                     duration: 400
                     easing.type: Easing.OutExpo
                 }
@@ -51,30 +50,27 @@ Rectangle {
             to: "opened"
             SequentialAnimation {
                 NumberAnimation {
-                    target: card_pic
+                    target: card_face
                     property: "height"
                     from: 0
-                    to: card_pic.height
+                    to: card_face.sourceSize.height
                     duration: 400
                     easing.type: Easing.OutExpo
                 }
             }
 
         }
-
     ]
 
-
-
     Image {
-        id: card_pic
+        id: card_face
         anchors.centerIn: parent
         source: 'img/empty.png'
         MouseArea {
-            id: card_pic_mouse
+            id: card_face_mouse
             width: parent.width
             height: parent.height
-            enabled: !cardFreezed //true
+            enabled: !cardFrozen //true
             onClicked: {
                 root.clicked()
             }
@@ -88,13 +84,12 @@ Rectangle {
         MouseArea {
             width: parent.width
             height: parent.height
-            enabled: !cardFreezed
+            enabled: !cardFrozen
             onClicked: {
                 root.clicked()
             }
         }
     }
-
 }
 
 

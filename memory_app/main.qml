@@ -65,7 +65,6 @@ Window {
             onLevelClicked: {
                 stackView.push(gamePage)
             }
-
         }
     }
 
@@ -99,8 +98,6 @@ Window {
             }
             onBackClicked: {
                 stackView.popTo("levelChoosePage")
-
-
             }
         }
     }

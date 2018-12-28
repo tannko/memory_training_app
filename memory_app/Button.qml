@@ -11,7 +11,7 @@ Rectangle {
 
     Text {
         id: label
-        anchors.centerIn: parent
+        anchors.fill: parent
         text: "button"
     }
 

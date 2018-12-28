@@ -15,8 +15,7 @@ Rectangle {
 
         onClicked: {
             if (setView.currentIndex < setView.model-1)
-                setView.currentIndex++;
-            //setPageText.text = setView.currentIndex
+                setView.incrementCurrentIndex();
         }
     }
 
@@ -28,8 +27,7 @@ Rectangle {
 
         onClicked: {
             if (setView.currentIndex > 0)
-                setView.currentIndex--;
-            //setPageText.text = setView.currentIndex
+                setView.decrementCurrentIndex();
         }
     }
 
@@ -41,8 +39,6 @@ Rectangle {
             root.backClicked()
         }
     }
-
-
 
     Text {
         id: setPageText

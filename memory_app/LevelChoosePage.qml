@@ -29,8 +29,6 @@ Rectangle {
                 root.levelClicked();
             }
         }
-
     }
-
     // here must be grid of images-levels to choose
 }

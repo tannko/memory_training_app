@@ -6,25 +6,20 @@ Rectangle {
     signal pauseClicked
     signal gameFinished
 
-
-
-
     QtObject {
         id: impl
 
         property real startTime: new Date().getTime()
         property int gridCellWidth: 150
         property int gridCellHeight: 190
-        property int deckX: 500
-        property int deckY: 500
+        property int deckX: 0.75*root.width
+        property int deckY: 0.6*root.height
         property int deckAnimationMoveDuration: 2000
         property int deckAnimationTurnoverDuration: 1500
         property int gridMargins: 150
         property int pairCount: 4
         property int openPairCount: 0
         property int scorePoints: 0
-
-
 
         function getCardsIndexArray(count) {
             var i = 0, j = 0, array = [];
@@ -53,6 +48,13 @@ Rectangle {
             if (cardsToDeckAnim.running)
                 cardsToDeckAnim.complete();
             cardsToDeckAnim.start();
+        }
+
+        function updateTime() {
+            var msec = new Date().getTime() - startTime;
+            var sec = Math.floor((msec/1000)%60);
+            var min = Math.floor((msec/(1000*60))%60);
+            timeText.text = min + ':' + (sec < 10 ? + '0': '') + sec;
         }
 
     }
@@ -97,7 +99,6 @@ Rectangle {
         anchors.fill: parent
         source: 'img/table.png'
 
-
         Timer {
             id: preview_timer
             interval: 3000
@@ -121,17 +122,13 @@ Rectangle {
             }
         }
 
-
         Timer {
             id: clock_timer
             interval: 1000
             repeat: true
             onTriggered: {
                 // show current time
-                var msec = new Date().getTime() - impl.startTime;
-                var sec = Math.floor((msec/1000)%60);
-                var min = Math.floor((msec/(1000*60))%60);
-                timeText.text = min + ':' + (sec < 10 ? + '0': '') + sec;
+                impl.updateTime();
             }
         }
 
@@ -140,8 +137,6 @@ Rectangle {
             folder: 'img/physics'
             nameFilters: [ "*.png"]
         }
-
-
 
         GridView {
             id: grid
@@ -152,7 +147,6 @@ Rectangle {
             cellWidth: impl.gridCellWidth
             cellHeight: impl.gridCellHeight
 
-            //property int openCardsCount: 0
             property MemoryCard currOpenCard: null
             property MemoryCard lastOpenCard: null
 
@@ -167,7 +161,7 @@ Rectangle {
 
             MemoryCard {
                 cardOpened: grid.allCardsOpen || isSelected
-                cardFreezed: grid.allCardsOpen || !mouseClickEnabled
+                cardFrozen: grid.allCardsOpen || !mouseClickEnabled
                 src: 'img/physics/physics_' + modelData + '.png'
 
                 onClicked: {
@@ -176,12 +170,9 @@ Rectangle {
                         if (grid.lastOpenCard != null) { // if another card was opened before
                             if (src === grid.lastOpenCard.src) {  // and two these cards are equal
                                 // bingo!
-                                this.mouseClickEnabled = false;//this.freeze(); // disable mouse clicking for this pair
-                                grid.lastOpenCard.mouseClickEnabled = false; //grid.lastOpenCard.freeze();
-
+                                this.mouseClickEnabled = false;// disable mouse clicking for this pair
+                                grid.lastOpenCard.mouseClickEnabled = false;
                                 impl.animateToDeck([this, grid.lastOpenCard]);
-
-                                //grid.openCardsCount++;
                                 grid.lastOpenCard = null // pair is closed or matched, start from the null again
                                 impl.scorePoints += 100
 
@@ -193,14 +184,11 @@ Rectangle {
                             } else { // they are not equal
                                 grid.currOpenCard = this;
                                 closing_timer.start(); // show the cards for 2 sec and close both cards in timer
-                                //grid.openCardsCount -= 2;
                             }
                         } else { // this is the first card for a pair match
                             grid.lastOpenCard = this;
-                            //grid.openCardsCount++;
                         }
                     } else { // card was closed
-                        //grid.openCardsCount--;
                         grid.lastOpenCard = null;
                     }
                 }
@@ -216,9 +204,6 @@ Rectangle {
 
         Text {
             id: scoreText
-
-
-
             anchors.left: parent.left
             anchors.leftMargin: 20
             color: 'brown'
