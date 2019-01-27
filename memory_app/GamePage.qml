@@ -23,8 +23,8 @@ Rectangle {
 
         function getCardsIndexArray(count) {
             var i = 0, j = 0, array = [];
-            for (i=0; i< count; i++) {
-                for (j=0; j<2; j++)
+            for (i = 0; i < count; i++) {
+                for (j = 0; j < 2; j++)
                     array.push(i);
             }
             shuffle(array);
@@ -35,18 +35,19 @@ Rectangle {
         function shuffle(array) {
             var i = 0, j = 0, temp = null;
 
-            for (i = array.length-1; i > 0; i-=1) {
+            for (i = array.length - 1; i > 0; i-=1) {
                 j = Math.floor(Math.random()*(i+1));
-                temp = array[i]
-                array[i] = array[j]
-                array[j] = temp
+                temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
             }
         }
 
         function animateToDeck(targets) {
             cardsToDeckAnim.targets = targets;
-            if (cardsToDeckAnim.running)
+            if (cardsToDeckAnim.running) {
                 cardsToDeckAnim.complete();
+            }
             cardsToDeckAnim.start();
         }
 
@@ -57,6 +58,15 @@ Rectangle {
             timeText.text = min + ':' + (sec < 10 ? + '0': '') + sec;
         }
 
+    }
+
+    QtObject {
+        id: gameLogic
+
+        property MemoryCard currOpenCard: null
+        property MemoryCard lastOpenCard: null
+
+        property bool forceAllCardsOpen: false
     }
 
     ParallelAnimation {
@@ -104,7 +114,7 @@ Rectangle {
             interval: 3000
             repeat: false
             onTriggered: {
-                grid.allCardsOpen = false;
+                gameLogic.forceAllCardsOpen = false;
                 impl.startTime = new Date().getTime();
                 clock_timer.start();
             }
@@ -147,11 +157,6 @@ Rectangle {
             cellWidth: impl.gridCellWidth
             cellHeight: impl.gridCellHeight
 
-            property MemoryCard currOpenCard: null
-            property MemoryCard lastOpenCard: null
-
-            property bool allCardsOpen: false
-
             delegate: memoryCard
 
         }
@@ -160,20 +165,20 @@ Rectangle {
             id: memoryCard
 
             MemoryCard {
-                cardOpened: grid.allCardsOpen || isSelected
-                cardFrozen: grid.allCardsOpen || !mouseClickEnabled
+                cardOpened: gameLogic.forceAllCardsOpen || isSelected
+                cardFrozen: gameLogic.forceAllCardsOpen || !mouseClickEnabled
                 src: 'img/physics/physics_' + modelData + '.png'
 
                 onClicked: {
                     isSelected = !isSelected;
                     if (cardOpened) { // if this card became opened
-                        if (grid.lastOpenCard != null) { // if another card was opened before
-                            if (src === grid.lastOpenCard.src) {  // and two these cards are equal
+                        if (gameLogic.lastOpenCard != null) { // if another card was opened before
+                            if (src === gameLogic.lastOpenCard.src) {  // and two these cards are equal
                                 // bingo!
                                 this.mouseClickEnabled = false;// disable mouse clicking for this pair
-                                grid.lastOpenCard.mouseClickEnabled = false;
-                                impl.animateToDeck([this, grid.lastOpenCard]);
-                                grid.lastOpenCard = null // pair is closed or matched, start from the null again
+                                gameLogic.lastOpenCard.mouseClickEnabled = false;
+                                impl.animateToDeck([this, gameLogic.lastOpenCard]);
+                                gameLogic.lastOpenCard = null // pair is closed or matched, start from the null again
                                 impl.scorePoints += 100
 
                                 impl.openPairCount++;
@@ -182,14 +187,14 @@ Rectangle {
                                     root.gameFinished();
                                 }
                             } else { // they are not equal
-                                grid.currOpenCard = this;
+                                gameLogic.currOpenCard = this;
                                 closing_timer.start(); // show the cards for 2 sec and close both cards in timer
                             }
                         } else { // this is the first card for a pair match
-                            grid.lastOpenCard = this;
+                            gameLogic.lastOpenCard = this;
                         }
                     } else { // card was closed
-                        grid.lastOpenCard = null;
+                        gameLogic.lastOpenCard = null;
                     }
                 }
             }
@@ -197,7 +202,7 @@ Rectangle {
         }
 
         Component.onCompleted: {
-            grid.allCardsOpen = true; //grid.openAllCards();
+            gameLogic.forceAllCardsOpen = true; //grid.openAllCards();
             preview_timer.start();
 
         }
@@ -224,9 +229,7 @@ Rectangle {
         Button {
             id: pauseButton
 
-            anchors.top: parent.top
-            x: parent.width/2 - pauseButton.width/2
-            //anchors.centerIn: parent.Center
+            anchors.horizontalCenter: parent.horizontalCenter
 
             onClicked: {
                 root.pauseClicked()
